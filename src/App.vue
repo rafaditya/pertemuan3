@@ -1,6 +1,6 @@
 <template>
   <div class="todo-app"> <!-- Container utama untuk aplikasi todo -->
-    <form @submit.prevent="addTodo" class="todo-form">  <!-- Form untuk menambahkan todo baru -->
+    <form @submit.prevent="addTodo" class="todo-form"> <!-- Form untuk menambahkan todo baru -->
       <input v-model="newTodo" required placeholder="new todo" class="todo-input"> <!-- Input teks untuk todo baru -->
       <button type="submit" class="todo-button">Add Todo</button> <!-- Tombol untuk menambahkan todo -->
     </form>
@@ -13,14 +13,16 @@
       </li>
     </ul>
 
-    <button @click="hideCompleted = !hideCompleted" class="toggle-completed"> <!-- Tombol untuk menyembunyikan/menampilkan todo yang selesai -->
+    <button @click="hideCompleted = !hideCompleted" class="toggle-completed">
+      <!-- Tombol untuk menyembunyikan/menampilkan todo yang selesai -->
       {{ hideCompleted ? 'Show all' : 'Hide completed' }} <!-- Teks tombol sesuai status -->
     </button>
+    <p>{{ pesan }}</p>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue' // Import ref dan computed dari Vue
+import { ref, computed, onUpdated, watch } from 'vue' // Import ref dan computed dari Vue
 
 let id = 0 // Variabel id untuk menghasilkan ID unik untuk setiap todo
 
@@ -46,11 +48,24 @@ function addTodo() { // Fungsi untuk menambahkan todo baru
 function removeTodo(todo) { // Fungsi untuk menghapus todo
   todos.value = todos.value.filter((t) => t.id !== todo.id) // Hapus todo berdasarkan id
 }
+
+onUpdated(() => { // Penggunaan lifecycle memeriksa apakah ada terjadi suatu perubahan pada browser
+  console.log("Ada suatu perubahan terjadi")
+})
+
+// Penggunaan Watch
+const pesan = ref("")
+watch(newTodo, (seleksiData) => {
+  if (data.includes("?")) {
+    pesan.value = "Tidak boleh mengandung ?"
+  } else {
+    pesan.value = ""
+  }
+})
+
 </script>
 <style>
-
-.done {  
+.done {
   text-decoration: line-through;
 }
 </style>
-
